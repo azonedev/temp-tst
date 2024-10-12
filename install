@@ -17,11 +17,27 @@ else
     exit 1
 fi
 
-# Step 3.1: Start the Docker containers
+# Step 2.3: Make .data directory and handle permissions
+mkdir -p .data/redis .data/mysql .data/postgres .data/logs/worker .data/nginx/logs
+
+# Step 3: Start the Docker containers
 $DOCKER_COMPOSE up -d
 
-# Step 3.2: Execute the command using docker-compose or docker compose
+# Step 4: Run necessary installation commands
 $DOCKER_COMPOSE exec app composer install
 
-# Step 4: Set permissions for the ./storage directory
+# Check if the Laravel application is running before running migrations
+if $DOCKER_COMPOSE exec app php artisan migrate; then
+    echo "Database migration completed."
+else
+    echo "Migration failed."
+    exit 1
+fi
+
+# Optional: Seed the database
+$DOCKER_COMPOSE exec app php artisan db:seed
+
+# Step 5: Set permissions for the ./storage directory
 cd app && chmod -R 777 ./storage
+
+echo "Installation complete."
