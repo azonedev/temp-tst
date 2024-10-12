@@ -30,7 +30,9 @@ class RegisterationService
 
     public function getUserByNID(string $nid): ?User
     {
-        return User::where('nid', $nid)->with('registration','registration.center')->first();
+        return User::with(['registration', 'registration.center'])
+            ->where('nid', $nid)
+            ->first();
     }
 
     public function getUserStatus(Registration $registration): RegistrationStatus

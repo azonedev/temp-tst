@@ -10,7 +10,7 @@ class Registration extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'vaccine_center_id'];
+    protected $guarded = [];
 
     public function user(): BelongsTo
     {

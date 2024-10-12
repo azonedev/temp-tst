@@ -1,6 +1,5 @@
 <?php
 
-use App\Jobs\SendEmailJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+Route::get('/', \App\Http\Controllers\IndexController::class)->name('home');
 
 Route::group(['prefix'=>'register'], function(){
     Route::get('/', [\App\Http\Controllers\RegisterationController::class, 'index'])->name('register');
@@ -24,8 +21,3 @@ Route::group(['prefix'=>'register'], function(){
 });
 
 Route::get('/search', \App\Http\Controllers\SearchController::class)->name('checkStatus');
-
-Route::post('/search', function (){
-    return view('search');
-})->name('checkStatus.submit');
-
