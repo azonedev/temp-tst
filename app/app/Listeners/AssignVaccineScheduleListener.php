@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Enums\RegistrationStatus;
 use App\Events\RegisteredEvent;
-use App\Mail\ScheduleConfirmNotification;
+use App\Mail\ScheduleNotification;
 use App\Models\Registration;
 use App\Models\VaccineCenter;
 use Carbon\Carbon;
@@ -40,7 +40,7 @@ class AssignVaccineScheduleListener implements ShouldQueue
 
         logger('Registration updated', $registration->toArray());
 
-        Mail::to($user->email)->send(new ScheduleConfirmNotification($user, $vaccineCenter, $nextAvailableDate));
+        Mail::to($user->email)->send(new ScheduleNotification($user, $vaccineCenter, $nextAvailableDate));
     }
 
     private function calculateNextAvailableDate(VaccineCenter $vaccineCenter): Carbon

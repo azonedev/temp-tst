@@ -12,14 +12,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ScheduleConfirmNotification extends Mailable
+class ScheduleNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user, public VaccineCenter $center, public Carbon $scheduleDate)
+    public function __construct(public User $user, public VaccineCenter $center, public Carbon $scheduleDate, public $subject = 'Vaccination Schedule Confirmation')
     {
         //
     }
@@ -30,7 +30,7 @@ class ScheduleConfirmNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Vaccination Schedule Confirmation',
+            subject: $this->subject,
         );
     }
 
