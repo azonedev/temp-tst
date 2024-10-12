@@ -2,9 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\RegistrationStatus;
 use App\Jobs\ProcessScheduleReminderJob;
 use App\Models\Registration;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class ScheduleReminderCommand extends Command
 {
@@ -16,24 +18,29 @@ class ScheduleReminderCommand extends Command
     protected $signature = 'app:schedule-reminder-notification';
 
     /**
-     * The command will be scheduled to run daily at 9 PM. The command will be responsible for sending a reminder notification to users who have a vaccination schedule for the next day.
+     * The command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sends reminder notifications to users who have vaccination schedules for the next day';
 
     /**
      * Execute the console command.
      */
     public function handle(): void
     {
-        Registration::whereDate('scheduled_date', now()->addDay()->toDateString())
-            ->pluck('id')
-            ->chunk(100, function ($registrationIds) {
-                logger('Processing schedule reminder notification', $registrationIds);
-                // each chunk will be handled with a job - 100 registrations will be processed in a single job
-                ProcessScheduleReminderJob::dispatch($registrationIds);
-            });
+        $regIds = Registration::whereDate('scheduled_date', now()->addDay()->toDateString())
+            ->where('status', RegistrationStatus::SCHEDULED)
+            ->pluck('id');
 
+        $this->info('Found ' . $regIds->count() . ' scheduled registrations for tomorrow.');
+
+        // Handle chunking to avoid memory issues (chunked at 100 records per job)
+        $regIds->chunk(100)->each(function (Collection $chunk) {
+            ProcessScheduleReminderJob::dispatch($chunk);
+        });
+
+        // Output message indicating the reminder job dispatch
+        $this->info('Reminder notifications have been scheduled for processing.');
     }
 }
