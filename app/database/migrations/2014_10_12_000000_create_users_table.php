@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nid', 20)->unique()->index();
+            $table->string('nid', 20)->unique();
             $table->string('name', 100);
             $table->string('email', 100)->unique();
-            $table->string('phone', 20)->unique();
+            $table->string('phone', 20);
             $table->timestamps();
-            $table->index('nid'); // Added index on nid for faster lookups
+            $table->index(['nid', 'email']); // Added index on nid for faster lookups
         });
     }
 

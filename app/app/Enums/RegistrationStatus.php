@@ -11,3 +11,6 @@ enum RegistrationStatus: int
     case VACCINATED = 4;
 
 }
+
+
+

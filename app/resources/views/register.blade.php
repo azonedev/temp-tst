@@ -50,7 +50,9 @@
             <select class="form-select @error('vaccine_center_id') is-invalid @enderror" id="vaccine_center" name="vaccine_center_id" required>
                 <option value="" selected disabled>Select a center</option>
                 @foreach($centers as $center)
-                    <option value="{{ $center->id }}" {{ old('vaccine_center_id') == $center->id ? 'selected' : '' }}>{{ $center->name }}</option>
+                    <option value="{{ $center->id }}" {{ old('vaccine_center_id') == $center->id ? 'selected' : '' }}>
+                        {{ $center->name }} - {{$center->location}}
+                    </option>
                 @endforeach
             </select>
             @error('vaccine_center_id')
@@ -62,22 +64,4 @@
 
         <button type="submit" class="btn btn-primary">Register</button>
     </form>
-
-    <!-- Success Modal -->
-{{--    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">--}}
-{{--        <div class="modal-dialog">--}}
-{{--            <div class="modal-content bg-dark text-white">--}}
-{{--                <div class="modal-header">--}}
-{{--                    <h5 class="modal-title" id="successModalLabel">Registration Successful</h5>--}}
-{{--                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>--}}
-{{--                </div>--}}
-{{--                <div class="modal-body">--}}
-{{--                    You have successfully registered for vaccination!--}}
-{{--                </div>--}}
-{{--                <div class="modal-footer">--}}
-{{--                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
 @endsection

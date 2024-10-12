@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required','string', 'min:5', 'max:100'],
-            'email' => ['required', 'email','min:5', 'max:100'],
+            'email' => ['required', 'email','min:5', 'max:100', 'unique:users,email'],
             'phone' => ['required', 'string', 'min:11', 'max:20'],
             'vaccine_center_id' => ['required'],
             'nid' => ['required','numeric', 'max_digits:20', 'unique:users,nid'],
@@ -35,6 +35,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'nid.unique' => 'This NID is already registered',
+            'email.unique' => 'This email is already registered',
         ];
     }
 }

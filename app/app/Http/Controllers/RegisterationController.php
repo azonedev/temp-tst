@@ -4,23 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Events\RegisteredEvent;
 use App\Http\Requests\RegisterRequest;
-use App\Models\Registration;
-use App\Models\User;
-use App\Models\VaccineCenter;
 use App\Services\RegisterationService;
+use App\Services\VaccineCenterService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class RegisterationController extends Controller
 {
-    public function __construct(public RegisterationService $registeration)
+    public function __construct(public RegisterationService $registeration, public VaccineCenterService $vaccineCenter)
     {
 
     }
 
     public function index(): view
     {
-        $centers = VaccineCenter::select('name','id')->get();
+        $centers = $this->vaccineCenter->getVaccineCenters();
         return view('register', compact('centers'));
     }
 
@@ -38,12 +36,14 @@ class RegisterationController extends Controller
 
             DB::commit();
 
-            return redirect()->route('home')->with('status', 'Registered successfully');
+            return redirect()->route('home')->with('status', 'Your registration has been completed successfully! We will email you about the schedule, sortly.');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', $e->getMessage());
-//            return redirect()->back()->with('error', 'Registration failed. Please try again.');
+
+            logger()->error('Registration failed', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+            return redirect()->back()->with('error', 'Registration failed. Please try again.');
         }
     }
 

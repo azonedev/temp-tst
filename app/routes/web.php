@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    SendEmailJob::dispatch();
     return view('index');
 })->name('home');
 
@@ -24,9 +23,7 @@ Route::group(['prefix'=>'register'], function(){
     Route::post('/', [\App\Http\Controllers\RegisterationController::class, 'create'])->name('register.submit');
 });
 
-Route::get('/search', function (){
-    return view('search');
-})->name('checkStatus');
+Route::get('/search', \App\Http\Controllers\SearchController::class)->name('checkStatus');
 
 Route::post('/search', function (){
     return view('search');

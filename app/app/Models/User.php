@@ -11,5 +11,9 @@ class User extends Model
 
     protected $guarded = [];
 
-    
+    // relations
+     public function registration(): \Illuminate\Database\Eloquent\Relations\HasOne
+     {
+        return $this->hasOne(Registration::class);
+     }
 }
